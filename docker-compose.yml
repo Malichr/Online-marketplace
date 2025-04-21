@@ -1,0 +1,29 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+    environment:
+      - MONGO_URI=mongodb://database:27017/marketplace
+      - SESSION_SECRET=w9$2hT!b7X9z@1Pf4H2kR8sM5e3qV6cL
+      - JWT_SECRET=u7#2Jz!m4Q1pT6aR9wE3dS0xY8kC5vF2
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+
+  database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

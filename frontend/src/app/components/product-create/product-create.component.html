@@ -1,0 +1,23 @@
+<div class="product-create-container">
+    <mat-card>
+      <mat-card-title>Új termék feltöltése</mat-card-title>
+      <mat-card-content>
+        <form (ngSubmit)="createProduct()">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Termék neve</mat-label>
+            <input matInput [(ngModel)]="product.name" name="name" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Leírás</mat-label>
+            <textarea matInput [(ngModel)]="product.description" name="description"></textarea>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Ár</mat-label>
+            <input matInput type="number" [(ngModel)]="product.price" name="price" required>
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit">Feltöltés</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  

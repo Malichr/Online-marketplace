@@ -1,0 +1,37 @@
+.favorites-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+.favorite-card {
+  width: 300px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+mat-card-header {
+  padding: 16px;
+}
+
+mat-card-content {
+  flex-grow: 1;
+  padding: 16px;
+}
+
+.price {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+}
+
+mat-card-actions {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+}

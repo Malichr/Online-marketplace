@@ -1,0 +1,18 @@
+<mat-toolbar color="primary">
+  <span>Online Piactér</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/">Termékek</button>
+  <ng-container *ngIf="!isLoggedIn">
+    <button mat-button routerLink="/register">Regisztráció</button>
+    <button mat-button routerLink="/login">Bejelentkezés</button>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn">
+    <button mat-button *ngIf="isSeller" routerLink="/create-product">Új termék</button>
+    <button mat-button *ngIf="isSeller" routerLink="/my-sales">Eladások</button>
+    <button mat-button *ngIf="isBuyer" routerLink="/my-orders">Vásárlások</button>
+    <button mat-button routerLink="/favorites">Kedvencek</button>
+    <button mat-button (click)="logout()">Kijelentkezés</button>
+  </ng-container>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

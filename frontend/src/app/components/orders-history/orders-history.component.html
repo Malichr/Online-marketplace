@@ -1,0 +1,42 @@
+<div class="orders-container">
+  <mat-card>
+    <mat-card-title>Vásárlási előzmények</mat-card-title>
+    <mat-card-content>
+      <table mat-table [dataSource]="orders" class="mat-elevation-z8">
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell *matHeaderCellDef>Termék neve</th>
+          <td mat-cell *matCellDef="let order">{{order.product.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="seller">
+          <th mat-header-cell *matHeaderCellDef>Eladó</th>
+          <td mat-cell *matCellDef="let order">{{order.product.seller.username}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Ár</th>
+          <td mat-cell *matCellDef="let order">{{order.price}} Ft</td>
+        </ng-container>
+
+        <ng-container matColumnDef="purchaseDate">
+          <th mat-header-cell *matHeaderCellDef>Vásárlás dátuma</th>
+          <td mat-cell *matCellDef="let order">{{order.purchaseDate | date:'yyyy.MM.dd. HH:mm:ss'}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Műveletek</th>
+          <td mat-cell *matCellDef="let order">
+            <button mat-icon-button color="warn" (click)="deleteOrder(order)"
+                    matTooltip="Rendelés törlése">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
+  

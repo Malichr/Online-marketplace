@@ -1,0 +1,18 @@
+<div class="favorites-container">
+  <mat-card *ngFor="let favorite of favorites" class="favorite-card">
+    <mat-card-header>
+      <mat-card-title>{{favorite.product.name}}</mat-card-title>
+      <mat-card-subtitle>Eladó: {{favorite.product.seller.username}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{favorite.product.description}}</p>
+      <p class="price">{{favorite.product.price}} Ft</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-icon-button color="warn" (click)="removeFavorite(favorite)" 
+              matTooltip="Eltávolítás a kedvencekből">
+        <mat-icon>favorite</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div> 

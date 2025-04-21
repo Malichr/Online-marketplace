@@ -1,0 +1,25 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+  
+  .full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  mat-card {
+    min-width: 300px;
+    padding: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+  
