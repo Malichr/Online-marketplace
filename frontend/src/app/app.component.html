@@ -9,7 +9,7 @@
   <ng-container *ngIf="isLoggedIn">
     <button mat-button *ngIf="isSeller" routerLink="/create-product">Új termék</button>
     <button mat-button *ngIf="isSeller" routerLink="/my-sales">Eladások</button>
-    <button mat-button *ngIf="isBuyer" routerLink="/my-orders">Vásárlások</button>
+    <button mat-button routerLink="/my-orders">Vásárlások</button>
     <button mat-button routerLink="/favorites">Kedvencek</button>
     <button mat-button (click)="logout()">Kijelentkezés</button>
   </ng-container>

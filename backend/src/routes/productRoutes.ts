@@ -48,10 +48,6 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
 
 router.post('/:id/buy', authenticate, async (req: AuthRequest, res: Response) => {
   try {
-    if (req.user?.role !== 'buyer') {
-      return res.status(403).json({ message: 'Csak vásárló regisztrált felhasználó vásárolhat terméket' });
-    }
-
     const product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ message: 'Termék nem található' });
@@ -59,8 +55,8 @@ router.post('/:id/buy', authenticate, async (req: AuthRequest, res: Response) =>
     if (product.sold) {
       return res.status(400).json({ message: 'A termék már el van adva' });
     }
-    if (product.seller.toString() === req.user.id) {
-      return res.status(400).json({ message: 'Az eladó nem vásárolhatja a saját termékét' });
+    if (product.seller.toString() === req.user?.id) {
+      return res.status(400).json({ message: 'A saját terméket nem vásárolhatod meg' });
     }
     
     product.sold = true;
@@ -69,7 +65,7 @@ router.post('/:id/buy', authenticate, async (req: AuthRequest, res: Response) =>
     
     const order = new Order({
       product: product._id,
-      buyer: req.user.id,
+      buyer: req.user?.id,
       price: product.price
     });
     await order.save();
@@ -85,8 +81,23 @@ router.get('/sales', authenticate, async (req: AuthRequest, res: Response) => {
     if (req.user?.role !== 'seller') {
       return res.status(403).json({ message: 'Csak eladó regisztrált felhasználó érheti el az értékesítési adatokat' });
     }
-    const sales = await Product.find({ seller: req.user.id, sold: true });
-    res.json(sales);
+    
+    const products = await Product.find({ seller: req.user.id, sold: true });
+    
+    const productIds = products.map(product => product._id);
+    const orders = await Order.find({ product: { $in: productIds } }).populate('buyer', 'username');
+    
+    const salesWithBuyerInfo = products.map(product => {
+      const productId = product._id ? product._id.toString() : '';
+      const order = orders.find(o => o.product.toString() === productId);
+      
+      return {
+        ...product.toObject(),
+        buyer: order ? order.buyer : null
+      };
+    });
+    
+    res.json(salesWithBuyerInfo);
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
@@ -94,10 +105,7 @@ router.get('/sales', authenticate, async (req: AuthRequest, res: Response) => {
 
 router.get('/orders', authenticate, async (req: AuthRequest, res: Response) => {
   try {
-    if (req.user?.role !== 'buyer') {
-      return res.status(403).json({ message: 'Csak vásárló regisztrált felhasználó érheti el a vásárlási adatokat' });
-    }
-    const orders = await Order.find({ buyer: req.user.id })
+    const orders = await Order.find({ buyer: req.user?.id })
       .populate({
         path: 'product',
         populate: {

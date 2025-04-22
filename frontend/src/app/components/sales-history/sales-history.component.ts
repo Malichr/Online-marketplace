@@ -22,7 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class SalesHistoryComponent implements OnInit {
   sales: any[] = [];
-  displayedColumns: string[] = ['name', 'description', 'price', 'soldDate', 'actions'];
+  displayedColumns: string[] = ['name', 'description', 'buyer', 'price', 'soldDate', 'actions'];
 
   constructor(
     private productService: ProductService,

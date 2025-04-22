@@ -9,8 +9,13 @@ dotenv.config();
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/marketplace';
 
 const seedUsers = async () => {
-  await User.deleteMany({});
+  const userCount = await User.countDocuments();
+  if (userCount > 0) {
+    console.log('Már vannak felhasználók az adatbázisban, kihagyom a felhasználók seedelését');
+    return await User.find({ role: 'seller' });
+  }
   
+  console.log('Felhasználók létrehozása...');
   const salt = await bcrypt.genSalt(10);
   const password = await bcrypt.hash('password123', salt);
   
@@ -39,13 +44,21 @@ const seedUsers = async () => {
   
   const createdUsers = await User.insertMany(users);
   console.log(`${createdUsers.length} felhasználó létrehozva`);
-  return createdUsers;
+  return createdUsers.filter(user => user.role === 'seller');
 };
 
-const seedProducts = async (users: any[]) => {
-  await Product.deleteMany({});
+const seedProducts = async (sellers: any[]) => {
+  const productCount = await Product.countDocuments();
+  if (productCount > 0) {
+    console.log('Már vannak termékek az adatbázisban, kihagyom a termékek seedelését');
+    return;
+  }
   
-  const sellers = users.filter(user => user.role === 'seller');
+  console.log('Termékek létrehozása...');
+  if (sellers.length === 0) {
+    console.log('Nincsenek eladók, nem tudok termékeket létrehozni');
+    return;
+  }
   
   const products = [
     {
@@ -66,14 +79,14 @@ const seedProducts = async (users: any[]) => {
       name: 'Kávéfőző',
       description: 'Alig használt kávéfőző, automata tisztítással',
       price: 35000,
-      seller: sellers[1]._id,
+      seller: sellers.length > 1 ? sellers[1]._id : sellers[0]._id,
       sold: false
     },
     {
       name: 'Kerékpár',
       description: 'Mountain bike, 27 sebességes, 29"-os kerekekkel',
       price: 95000,
-      seller: sellers[1]._id,
+      seller: sellers.length > 1 ? sellers[1]._id : sellers[0]._id,
       sold: false
     },
     {
@@ -81,8 +94,7 @@ const seedProducts = async (users: any[]) => {
       description: 'Fantasy könyvcsomag, 5 kötet',
       price: 15000,
       seller: sellers[0]._id,
-      sold: true,
-      soldDate: new Date()
+      sold: false
     }
   ];
   
@@ -95,10 +107,10 @@ const seedDatabase = async () => {
     await mongoose.connect(MONGO_URI);
     console.log('MongoDB kapcsolat létrejött');
     
-    const users = await seedUsers();
-    await seedProducts(users);
+    const sellers = await seedUsers();
+    await seedProducts(sellers);
     
-    console.log('Adatbázis inicializálás sikeres');
+    console.log('Adatbázis inicializálás befejezve');
     process.exit(0);
   } catch (error) {
     console.error('Hiba az adatbázis inicializálása során:', error);
